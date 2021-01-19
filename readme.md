@@ -4,7 +4,7 @@ This is a project to insert bible texts into a text.
 
 It searches through the supplied text for bible references and replaces these references with the corresponding bible text, formatted.
 
-It still needs a lot of work, though. This only works with the KJV and really needs to be optimised.
+It still needs a lot of work, though. This only works with the KJV, it really needs to be optimised and the UI has to be worked on.
 
 ## Resources Used
 
