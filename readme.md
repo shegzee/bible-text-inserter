@@ -1,10 +1,19 @@
 # Bible Text Inserter
 
-This is a project to insert bible texts into a text.
+## Introduction
 
-It searches through the supplied text for bible references and replaces these references with the corresponding bible text, formatted.
+This is a project to insert bible texts into a text; to make life easier for those who need to do so frequently.
 
-It still needs a lot of work, though. This only works with the KJV, it really needs to be optimised and the UI has to be worked on.
+It searches through the supplied text for bible references and replaces these references with the corresponding bible text, formatted as required.
+
+It still needs a lot of work, though. This only works with the KJV, it really needs to be optimised and the UI has to be worked on. Also, it formats the texts for my personal preferred markdown format.
+
+## How to Use
+
+- Open `index.html` in your browser.
+- Insert the text in the raw_text textarea, ensuring that each bible reference to be replaced is the only text on a line.
+- Click the button
+- The result will be output in the final_text textarea.
 
 ## Resources Used
 
