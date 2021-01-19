@@ -6,7 +6,7 @@ This is a project to insert bible texts into a text; to make life easier for tho
 
 It searches through the supplied text for bible references and replaces these references with the corresponding bible text, formatted as required.
 
-It still needs a lot of work, though. This only works with the KJV, it really needs to be optimised and the UI has to be worked on. Also, it formats the texts for my personal preferred markdown format.
+It still needs a lot of work, though. This only works with the KJV, it really needs to be optimised and the UI has to be worked on. Also, it formats the texts for my personal preferred markdown format: options should be provided, instead.
 
 ## How to Use
 
