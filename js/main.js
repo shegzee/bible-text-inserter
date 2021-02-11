@@ -8,14 +8,15 @@ const def_bible_text_format = "> %text%"
 const def_verse_number_format = "**%vn%** "
 const def_afterref_newline = true;
 const def_interverse_newline = false;
+const def_first_verse_number = false;
 
 function doit()
 {
-	var {ref_format, bible_text_format, verse_number_format, afterref_newline, interverse_newline} = fetch_settings();
+	var {ref_format, bible_text_format, verse_number_format, afterref_newline, interverse_newline, first_verse_number} = fetch_settings();
 	// fetch the raw text from the text area
 	raw_text = document.getElementById('raw_text').value;
 	// insert the texts
-	final_text = insert_texts(raw_text, ref_format, bible_text_format, verse_number_format, afterref_newline, interverse_newline);
+	final_text = insert_texts(raw_text, ref_format, bible_text_format, verse_number_format, afterref_newline, interverse_newline, first_verse_number);
 	// insert finished works in the corresponding text area
 	document.getElementById('final_text').value = final_text;
 }
@@ -27,8 +28,9 @@ function fetch_settings()
 	verse_number_format = document.getElementById('verse_number_format_input').value == "" ? def_verse_number_format : document.getElementById('verse_number_format_input').value;
 	afterref_newline = document.getElementById('afterref_newline_input').checked;
 	interverse_newline = document.getElementById('interverse_newline_input').checked;
+	first_verse_number = document.getElementById('first_verse_number_input').checked;
 
-	return {ref_format, bible_text_format, verse_number_format, afterref_newline, interverse_newline};
+	return {ref_format, bible_text_format, verse_number_format, afterref_newline, interverse_newline, first_verse_number};
 }
 
 // this receives a string and returns it with the bible references on individual lines having been replaced by the appropriate texts
@@ -37,7 +39,8 @@ function insert_texts(raw_text,
 	bible_text_format = def_bible_text_format,
 	verse_number_format=def_verse_number_format,
 	afterref_newline=def_afterref_newline,
-	interverse_newline=def_interverse_newline)
+	interverse_newline=def_interverse_newline,
+	first_verse_number=def_first_verse_number)
 {
 	// replace all the new lines with a filler string not found in the text
 	// this is to prevent the bcv parser from picking multiple texts
@@ -60,7 +63,7 @@ function insert_texts(raw_text,
 			var raw_ref = raw_refs[i];
 			// var raw_ref = raw_text.substr(osis.indices[0], osis.indices[1] - osis.indices[0]);
 			// fetch the text
-			var bible_text = get_bible_text(osis.osis, verse_number_format, interverse_newline);
+			var bible_text = get_bible_text(osis.osis, verse_number_format, interverse_newline, first_verse_number);
 			// fetch the reference to be displayed
 			var readable_ref = get_readable_reference(osis.osis)
 			// compose the final display format
@@ -114,7 +117,8 @@ function fetch_raw_refs(raw_text, osises)
 // fetch and render the bible text: with appropriate fillers, prefixes, etc. also takes care of verse ranges and verse lists
 function get_bible_text(reference,
 	verse_number_format=def_verse_number_format,
-	interverse_newline=def_interverse_newline)
+	interverse_newline=def_interverse_newline,
+	first_verse_number=def_first_verse_number)
 {
 	var refs = [];
 	var text = "";
@@ -123,7 +127,7 @@ function get_bible_text(reference,
 		// get the list of individual verses in the range or list specified
 		refs = get_verse_refs(reference);
 		// get the first verse and append to the verse number
-		text = verse_number_format.replace("%vn%", refs[0].split(".")[2]) + "" + get_verse_text(refs[0]) + (interverse_newline ? "<N>": " ")
+		text = (first_verse_number ? verse_number_format.replace("%vn%", refs[0].split(".")[2]) : "") + "" + get_verse_text(refs[0]) + (interverse_newline ? "<N>": " ")
 		//text = refs[0].split(".")[2] + " " + get_verse_text(refs[0]) + " "
 		// iterate over all the remaining verse references
 		for (var i = 1; i <= refs.length - 1; i++) {
