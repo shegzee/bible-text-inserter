@@ -14,7 +14,7 @@ button {
 	justify-content: center;
 	align-items: center;
 	text-align: center;
-	background: #0e2957;
+	background: #4e69b7;
 	padding: 1em;
 	margin: 0;
 	z-index: 1;
@@ -134,7 +134,7 @@ label {
 #do-it {
 	height: 5em;
 	width: 5em;
-	background: #0e3957;
+	background: #4e69b7;
 	color: white;
 	border-radius: 40%;
 }
