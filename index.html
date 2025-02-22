@@ -32,8 +32,13 @@
 		
 	</div>
 	<div class="sidebar" id="sidebar">
-		<a href="javascript:void(0)" class="link closebtn" onclick="toggleNav()">...</a>
+		<a href="javascript:void(0)" class="link closebtn" onclick="toggle_nav()">...</a>
 		<div class="settings">
+			<div class="grp">
+				<label for="presets_dropdown">Presets</label>
+				<select name="presets_dropdown" id="presets_dropdown" class="setting-text" onchange="load_preset(this)">
+				</select>
+			</div>
 			<div class="grp">
 				<label for="ref_format_input">Reference format</label>
 				<input type="text" name="ref_format_input" id="ref_format_input" class="setting-text" value=">#### %ref%">
@@ -66,6 +71,7 @@
 	<script src="js/bible_text.js" charset="utf-8"></script>
 	<script type="text/javascript" src="js/main.js"></script>
 	<script type="text/javascript">
+		load_option_presets();
 		load_bible();
 	</script>
 	<!-- <script type="text/javascript" src="js/jquery-3.5.1.min.js"></script> -->
