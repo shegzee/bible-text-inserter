@@ -10,6 +10,32 @@ const def_afterref_newline = true;
 const def_interverse_newline = false;
 const def_first_verse_number = false;
 
+// bible text formatting option presets
+const presets = [
+		{
+			name: "Comm Default",
+			ref_format: "%ref%  ",
+			bible_text_format: "%text%",
+			verse_number_format: "Vs%vn% ",
+			afterref_newline: false, interverse_newline: false, first_verse_number: false,
+			default: true
+		},
+		{
+			name: "Olu's",
+			ref_format: ">#### %ref%",
+			bible_text_format: "> %text%",
+			verse_number_format: "**%vn%** ",
+			afterref_newline: true, interverse_newline: false, first_verse_number: false
+		},
+		{
+			name: "HTML",
+			ref_format: "<blockquote><h4>%ref%</h4></blockquote>",
+			bible_text_format: "<blockquote>%text%</blockquote>",
+			verse_number_format: "<strong>%vn%</strong> ",
+			afterref_newline: true, interverse_newline: false, first_verse_number: false
+		},
+	];
+
 function doit()
 {
 	var {ref_format, bible_text_format, verse_number_format, afterref_newline, interverse_newline, first_verse_number} = fetch_settings();
@@ -254,7 +280,7 @@ function load_bible()
 // sidebar
 open = false;
 
-function toggleNav() {
+function toggle_nav() {
 	if (open) {
 		document.getElementById("sidebar").style.width = "0";
 		document.getElementById("container").style.marginRight = "0";
@@ -267,4 +293,26 @@ function toggleNav() {
 		document.getElementById("navbar").style.marginRight = "250px";
 		open = true;
 	}
+}
+
+// load text formatting option presets into dropdown
+function load_option_presets() {
+	presets_dropdown = document.getElementById("presets_dropdown");
+	for (var i = 0; i <= presets.length - 1; i++) {
+		var option = document.createElement("option");
+		option.text = presets[i].name;
+		presets_dropdown.add(new Option(presets[i].name, i, presets[i].default, presets[i].default));
+	}
+	load_preset(presets_dropdown);
+}
+
+// load selected text formatting option preset into inputs
+function load_preset(dropdown_element) {
+	index = dropdown_element.value;
+	document.getElementById('ref_format_input').value = presets[index].ref_format;
+	document.getElementById('bible_text_format_input').value = presets[index].bible_text_format;
+	document.getElementById('verse_number_format_input').value = presets[index].verse_number_format;
+	document.getElementById('afterref_newline_input').checked = presets[index].afterref_newline;
+	document.getElementById('interverse_newline_input').checked = presets[index].interverse_newline;
+	document.getElementById('first_verse_number_input').checked = presets[index].first_verse_number;
 }
