@@ -4,11 +4,13 @@ var verses; // verses is a global containing an array pointing to each verse ele
 
 // default formatting values
 const def_ref_format = ">#### %ref%";
-const def_bible_text_format = "> %text%"
-const def_verse_number_format = "**%vn%** "
+const def_bible_text_format = "> %text%";
+const def_verse_number_format = "**%vn%** ";
+const def_italics_format = "_%text%_";
 const def_afterref_newline = true;
 const def_interverse_newline = false;
 const def_first_verse_number = false;
+const def_do_italics = true;
 
 // bible text formatting option presets
 const presets = [
@@ -17,7 +19,8 @@ const presets = [
 			ref_format: "%ref%  ",
 			bible_text_format: "%text%",
 			verse_number_format: "Vs%vn% ",
-			afterref_newline: false, interverse_newline: false, first_verse_number: false,
+			italics_format: "%text%",
+			afterref_newline: false, interverse_newline: false, first_verse_number: false, do_italics: false,
 			default: true
 		},
 		{
@@ -25,24 +28,26 @@ const presets = [
 			ref_format: ">#### %ref%",
 			bible_text_format: "> %text%",
 			verse_number_format: "**%vn%** ",
-			afterref_newline: true, interverse_newline: false, first_verse_number: false
+			italics_format: "_%text%_",
+			afterref_newline: true, interverse_newline: false, first_verse_number: false, do_italics: true
 		},
 		{
 			name: "HTML",
 			ref_format: "<blockquote><h4>%ref%</h4></blockquote>",
 			bible_text_format: "<blockquote>%text%</blockquote>",
 			verse_number_format: "<strong>%vn%</strong> ",
-			afterref_newline: true, interverse_newline: false, first_verse_number: false
+			italics_format: "<em>%text%</em>",
+			afterref_newline: true, interverse_newline: false, first_verse_number: false, do_italics: true
 		},
 	];
 
 function doit()
 {
-	var {ref_format, bible_text_format, verse_number_format, afterref_newline, interverse_newline, first_verse_number} = fetch_settings();
+	var {ref_format, bible_text_format, verse_number_format, italics_format, afterref_newline, interverse_newline, first_verse_number, do_italics} = fetch_settings();
 	// fetch the raw text from the text area
 	raw_text = document.getElementById('raw_text').value;
 	// insert the texts
-	final_text = insert_texts(raw_text, ref_format, bible_text_format, verse_number_format, afterref_newline, interverse_newline, first_verse_number);
+	final_text = insert_texts(raw_text, ref_format, bible_text_format, verse_number_format, italics_format, afterref_newline, interverse_newline, first_verse_number, do_italics);
 	// insert finished works in the corresponding text area
 	document.getElementById('final_text').value = final_text;
 }
@@ -52,11 +57,13 @@ function fetch_settings()
 	ref_format = document.getElementById('ref_format_input').value == "" ? def_ref_format : document.getElementById('ref_format_input').value;
 	bible_text_format = document.getElementById('bible_text_format_input').value == "" ? def_bible_text_format : document.getElementById('bible_text_format_input').value;
 	verse_number_format = document.getElementById('verse_number_format_input').value == "" ? def_verse_number_format : document.getElementById('verse_number_format_input').value;
+	italics_format = document.getElementById('italics_format_input').value == "" ? def_italics_format : document.getElementById('italics_format_input').value;
 	afterref_newline = document.getElementById('afterref_newline_input').checked;
 	interverse_newline = document.getElementById('interverse_newline_input').checked;
 	first_verse_number = document.getElementById('first_verse_number_input').checked;
+	do_italics = document.getElementById('do_italics_input').checked;
 
-	return {ref_format, bible_text_format, verse_number_format, afterref_newline, interverse_newline, first_verse_number};
+	return {ref_format, bible_text_format, verse_number_format, italics_format, afterref_newline, interverse_newline, first_verse_number, do_italics};
 }
 
 // this receives a string and returns it with the bible references on individual lines having been replaced by the appropriate texts
@@ -64,9 +71,11 @@ function insert_texts(raw_text,
 	ref_format=def_ref_format,
 	bible_text_format = def_bible_text_format,
 	verse_number_format=def_verse_number_format,
+	italics_format=def_italics_format,
 	afterref_newline=def_afterref_newline,
 	interverse_newline=def_interverse_newline,
-	first_verse_number=def_first_verse_number)
+	first_verse_number=def_first_verse_number,
+	do_italics=def_do_italics)
 {
 	// replace all the new lines with a filler string not found in the text
 	// this is to prevent the bcv parser from picking multiple texts
@@ -89,7 +98,7 @@ function insert_texts(raw_text,
 			var raw_ref = raw_refs[i];
 			// var raw_ref = raw_text.substr(osis.indices[0], osis.indices[1] - osis.indices[0]);
 			// fetch the text
-			var bible_text = get_bible_text(osis.osis, verse_number_format, interverse_newline, first_verse_number);
+			var bible_text = get_bible_text(osis.osis, verse_number_format, interverse_newline, first_verse_number, italics_format, do_italics);
 			// fetch the reference to be displayed
 			var readable_ref = get_readable_reference(osis.osis)
 			// compose the final display format
@@ -144,7 +153,9 @@ function fetch_raw_refs(raw_text, osises)
 function get_bible_text(reference,
 	verse_number_format=def_verse_number_format,
 	interverse_newline=def_interverse_newline,
-	first_verse_number=def_first_verse_number)
+	first_verse_number=def_first_verse_number,
+	italics_format=def_italics_format,
+	do_italics=def_do_italics)
 {
 	var refs = [];
 	var text = "";
@@ -153,19 +164,19 @@ function get_bible_text(reference,
 		// get the list of individual verses in the range or list specified
 		refs = get_verse_refs(reference);
 		// get the first verse and append to the verse number
-		text = (first_verse_number ? verse_number_format.replace("%vn%", refs[0].split(".")[2]) : "") + "" + get_verse_text(refs[0]) + (interverse_newline ? "<N>": " ")
+		text = (first_verse_number ? verse_number_format.replace("%vn%", refs[0].split(".")[2]) : "") + "" + get_verse_text(refs[0], italics_format, do_italics) + (interverse_newline ? "<N>": " ")
 		//text = refs[0].split(".")[2] + " " + get_verse_text(refs[0]) + " "
 		// iterate over all the remaining verse references
 		for (var i = 1; i <= refs.length - 1; i++) {
 			// text = text + "**Vs " + refs[i].split(".")[2] + "** " + get_verse_text(refs[i]) + " ";
 			// append the next verse, in proper format, to the string containing the previous verses
-			text = text + "" + verse_number_format.replace("%vn%", refs[i].split(".")[2]) + "" + get_verse_text(refs[i]) + (interverse_newline ? "<N>": " ");
+			text = text + "" + verse_number_format.replace("%vn%", refs[i].split(".")[2]) + "" + get_verse_text(refs[i], italics_format, do_italics) + (interverse_newline ? "<N>": " ");
 			//text = text + "" + refs[i].split(".")[2] + " " + get_verse_text(refs[i]) + " ";
 		}
 		return text;
 	}
 	// for a single verse, get text
-	text = get_verse_text(reference);
+	text = get_verse_text(reference, italics_format, do_italics);
 	return text;
 }
 
@@ -212,8 +223,9 @@ function get_verse_refs(reference)
 
 // get the verse text from the XML bible data.
 // masterpiece hack.
-function get_verse_text(reference)
+function get_verse_text(reference, italics_format="%text%", do_italics=false)
 {
+	console.log("to italicise?", do_italics);
 	// this is terrible.
 	// iterate over all the verses and check for individual reference.
 	// highly inefficient.
@@ -239,7 +251,8 @@ function get_verse_text(reference)
 				if (node.nodeName == "transChange" && node.firstChild != null)
 				{
 					// append the value, with italicising wrappers, if implemented
-					verse_text = "" + verse_text.replace("\n", "") + " " + "_" + node.firstChild.data.replace("\n", "") + "_";
+					italicised_text = do_italics ? italics_format.replace("%text%", node.firstChild.data.replace("\n", "")) : node.firstChild.data.replace("\n", "");
+					verse_text = "" + verse_text.replace("\n", "") + " " + italicised_text;
 				}
 				if (node.data == undefined)
 				{
@@ -312,7 +325,9 @@ function load_preset(dropdown_element) {
 	document.getElementById('ref_format_input').value = presets[index].ref_format;
 	document.getElementById('bible_text_format_input').value = presets[index].bible_text_format;
 	document.getElementById('verse_number_format_input').value = presets[index].verse_number_format;
+	document.getElementById('italics_format_input').value = presets[index].italics_format;
 	document.getElementById('afterref_newline_input').checked = presets[index].afterref_newline;
 	document.getElementById('interverse_newline_input').checked = presets[index].interverse_newline;
 	document.getElementById('first_verse_number_input').checked = presets[index].first_verse_number;
+	document.getElementById('do_italics_input').checked = presets[index].do_italics;
 }
