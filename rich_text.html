@@ -1,0 +1,211 @@
+<html>
+<meta charset="UTF-8">
+<head>
+	<title>Insert Bible Text</title>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	
+	<!-- TipTap Editor CSS - Add this to your page head or CSS file -->
+	<style>
+	/* TipTap Editor Styles */
+	.tiptap-editor-container {
+	    background: white;
+	    border: 1px solid #e1e5e9;
+	    border-radius: 6px;
+	    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+	    overflow: hidden;
+	    margin: 10px 0;
+	}
+
+	.tiptap-toolbar {
+	    background: #f8f9fa;
+	    border-bottom: 1px solid #e1e5e9;
+	    padding: 8px 12px;
+	    display: flex;
+	    gap: 6px;
+	    flex-wrap: wrap;
+	}
+
+	.tiptap-btn {
+	    background: white;
+	    border: 1px solid #d0d7de;
+	    border-radius: 3px;
+	    padding: 6px 10px;
+	    cursor: pointer;
+	    font-size: 13px;
+	    font-weight: 500;
+	    transition: all 0.15s;
+	    color: #24292f;
+	}
+
+	.tiptap-btn:hover {
+	    background: #f3f4f6;
+	    border-color: #8c959f;
+	}
+
+	.tiptap-btn.active {
+	    background: #0969da;
+	    color: white;
+	    border-color: #0969da;
+	}
+
+	.tiptap-editor {
+	    min-height: 120px;
+	    max-height: 300px;
+	    overflow-y: auto;
+	}
+
+	.ProseMirror {
+	    padding: 12px;
+	    outline: none;
+	    font-size: 14px;
+	    line-height: 1.5;
+	    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+	    text-align: left;
+	}
+
+	.ProseMirror h1 {
+	    font-size: 1.875em;
+	    font-weight: 600;
+	    margin: 0.5em 0;
+	}
+
+	.ProseMirror h2 {
+	    font-size: 1.5em;
+	    font-weight: 600;
+	    margin: 0.6em 0;
+	}
+
+	.ProseMirror h3 {
+	    font-size: 1.25em;
+	    font-weight: 600;
+	    margin: 0.7em 0;
+	}
+
+	.ProseMirror p {
+	    margin: 0.75em 0;
+	}
+
+	.ProseMirror strong {
+	    font-weight: 600;
+	}
+
+	.ProseMirror em {
+	    font-style: italic;
+	}
+
+	.ProseMirror u {
+	    text-decoration: underline;
+	}
+
+	.ProseMirror ul, .ProseMirror ol {
+	    padding-left: 1.5em;
+	    margin: 0.75em 0;
+	}
+
+	.ProseMirror li {
+	    margin: 0.25em 0;
+	}
+	</style>
+
+
+</head>
+
+<body>
+	<nav class="navbar" id="navbar">
+		<a class="link" href="#">Home</a>
+		<a class="link" href="index.html">Plain Text</a>
+		<a class="current-page link" href="#">Rich Text</a>
+	</nav>
+	<div class="container" id="container">
+		<div class="main-container">
+			
+			<div class="tiptap-editor-container the-text">
+			    <div class="tiptap-toolbar">
+			        <button class="tiptap-btn" data-action="bold">Bold</button>
+			        <button class="tiptap-btn" data-action="italic">Italic</button>
+			        <button class="tiptap-btn" data-action="underline">Underline</button>
+			        <button class="tiptap-btn" data-action="h1">H1</button>
+			        <button class="tiptap-btn" data-action="h2">H2</button>
+			        <button class="tiptap-btn" data-action="h3">H3</button>
+			        <button class="tiptap-btn" data-action="paragraph">P</button>
+			    </div>
+			    <div class="tiptap-editor" id="editor1"></div>
+			</div>
+
+
+			<button id="do-it" onclick="doit()">>>></button>
+			<div class="tiptap-editor-container the-text">
+			    <div class="tiptap-toolbar">
+			        <button class="tiptap-btn" data-action="bold">Bold</button>
+			        <button class="tiptap-btn" data-action="italic">Italic</button>
+			        <button class="tiptap-btn" data-action="underline">Underline</button>
+			        <button class="tiptap-btn" data-action="h1">H1</button>
+			        <button class="tiptap-btn" data-action="h2">H2</button>
+			        <button class="tiptap-btn" data-action="h3">H3</button>
+			        <button class="tiptap-btn" data-action="paragraph">P</button>
+			    </div>
+			    <div class="tiptap-editor" id="editor2"></div>
+			</div>
+		</div>
+		
+	</div>
+	<div class="sidebar" id="sidebar">
+		<a href="javascript:void(0)" class="link closebtn" onclick="toggle_nav()">...</a>
+		<div class="settings">
+			<div class="grp">
+				<label for="presets_dropdown">Presets</label>
+				<select name="presets_dropdown" id="presets_dropdown" class="setting-text" onchange="load_preset(this)">
+				</select>
+			</div>
+			<div class="grp">
+				<label for="ref_format_input">Reference format</label>
+				<input type="text" name="ref_format_input" id="ref_format_input" class="setting-text" value=">#### %ref%">
+			</div>
+			<div class="grp">
+				<label for="bible_text_format_input">Bible Text Format</label>
+				<input type="text" name="bible_text_format_input" id="bible_text_format_input" class="setting-text" value="> %text%">
+			</div>
+			<div class="grp">
+				<label for="verse_number_format_input">Verse Number Format</label>
+				<input type="text" name="verse_number_format_input" id="verse_number_format_input" class="setting-text" value="**%vn%** ">
+			</div>
+			<div class="grp">
+				<label for="italics_format_input">Italicised Text Format</label>
+				<input type="text" name="italics_format_input" id="italics_format_input" class="setting-text" value="_%text%_">
+			</div>
+			<div class="grp">
+				<label for="afterref_newline_input">Newline after reference</label>
+				<input type="checkbox" name="afterref_newline_input" id="afterref_newline_input" class="setting-text" checked="true">
+			</div>
+			<div class="grp">
+				<label for="interverse_newline_input">Newline between verses</label>
+				<input type="checkbox" name="interverse_newline_input" id="interverse_newline_input" class="setting-text">
+			</div>
+			<div class="grp">
+				<label for="first_verse_number_input">First verse number</label>
+				<input type="checkbox" name="first_verse_number_input" id="first_verse_number_input" class="setting-text">
+			</div>
+			<div class="grp">
+				<label for="do_italics_input">Italicise italicised text 🌝</label>
+				<input type="checkbox" name="do_italics_input" id="do_italics_input" class="setting-text" checked="true">
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript" src="js/lib/en_bcv_parser.min.js" charset="UTF-8"></script>
+	<script src="js/lib/en.js" charset="utf-8"></script>
+	<script src="js/bible_text.js" charset="utf-8"></script>
+	<script type="text/javascript" src="js/main.richtext.js"></script>
+	<script type="text/javascript">
+		load_option_presets();
+		load_bible();
+	</script>
+	<!-- <script type="text/javascript" src="js/jquery-3.5.1.min.js"></script> -->
+	<!-- <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script> -->
+
+	<!-- TipTap Editor JavaScript - Add this before closing body tag -->
+	<script src="js/tiptap-editor.js"></script>
+</body>
+</html>

@@ -45,11 +45,13 @@ function doit()
 {
 	var {ref_format, bible_text_format, verse_number_format, italics_format, afterref_newline, interverse_newline, first_verse_number, do_italics} = fetch_settings();
 	// fetch the raw text from the text area
-	raw_text = document.getElementById('raw_text').value;
+	// raw_text = document.getElementById('raw_text').value;
+	raw_text = window.tiptapEditors.editor1.getHTML();
 	// insert the texts
 	final_text = insert_texts(raw_text, ref_format, bible_text_format, verse_number_format, italics_format, afterref_newline, interverse_newline, first_verse_number, do_italics);
 	// insert finished works in the corresponding text area
-	document.getElementById('final_text').value = final_text;
+	// document.getElementById('final_text').value = final_text;
+	window.tiptapEditors.editor2.setContent(final_text);
 }
 
 function fetch_settings()
@@ -103,11 +105,11 @@ function insert_texts(raw_text,
 			var readable_ref = get_readable_reference(osis.osis)
 			// compose the final display format
 			// text_render = ">#### " + readable_ref + "" + "<N>" + "> " + bible_text;
-			text_render = ref_format.replace("%ref%", readable_ref) + (afterref_newline ? "<N>": "") + bible_text_format.replace("%text%", bible_text);
+			text_render = ref_format.replace("%ref%", readable_ref) + (afterref_newline ? "<br>": "") + bible_text_format.replace("%text%", bible_text);
 			console.log(text_render);
 			console.log(osis.osis);
 			// replace the references with the appropriately formatted corresponding texts
-			raw_text = raw_text.replace("<N>"+raw_ref+"<N>", "<N>"+text_render+"<N>");
+			raw_text = raw_text.replace("<p>"+raw_ref+"</p>", ""+text_render+"");
 			// raw_text = raw_text.replace("<N></N>"+raw_ref, "\n"+bible_text);
 		}
 	}
@@ -164,13 +166,13 @@ function get_bible_text(reference,
 		// get the list of individual verses in the range or list specified
 		refs = get_verse_refs(reference);
 		// get the first verse and append to the verse number
-		text = (first_verse_number ? verse_number_format.replace("%vn%", refs[0].split(".")[2]) : "") + "" + get_verse_text(refs[0], italics_format, do_italics) + (interverse_newline ? "<N>": " ")
+		text = (first_verse_number ? verse_number_format.replace("%vn%", refs[0].split(".")[2]) : "") + "" + get_verse_text(refs[0], italics_format, do_italics) + (interverse_newline ? "<br>": " ")
 		//text = refs[0].split(".")[2] + " " + get_verse_text(refs[0]) + " "
 		// iterate over all the remaining verse references
 		for (var i = 1; i <= refs.length - 1; i++) {
 			// text = text + "**Vs " + refs[i].split(".")[2] + "** " + get_verse_text(refs[i]) + " ";
 			// append the next verse, in proper format, to the string containing the previous verses
-			text = text + "" + verse_number_format.replace("%vn%", refs[i].split(".")[2]) + "" + get_verse_text(refs[i], italics_format, do_italics) + (interverse_newline ? "<N>": " ");
+			text = text + "" + verse_number_format.replace("%vn%", refs[i].split(".")[2]) + "" + get_verse_text(refs[i], italics_format, do_italics) + (interverse_newline ? "<br>": " ");
 			//text = text + "" + refs[i].split(".")[2] + " " + get_verse_text(refs[i]) + " ";
 		}
 		return text;
