@@ -145,8 +145,8 @@ class TiptapEditor {
 // Initialize function to be called from HTML
 function initializeTiptapEditors() {
     // Initialize editors
-    const editor1 = new TiptapEditor('editor1', '<p>This is the first editor. Type here...</p>');
-    const editor2 = new TiptapEditor('editor2', '<p>This is the second editor. Type here too...</p>');
+    const editor1 = new TiptapEditor('editor1', '<p>Text without bible verses...</p>');
+    const editor2 = new TiptapEditor('editor2', '<p>Text with bible verses...</p>');
     
     // Make editors available globally
     window.tiptapEditors = { editor1, editor2 };
