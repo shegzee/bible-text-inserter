@@ -33,8 +33,8 @@ const presets = [
 		},
 		{
 			name: "HTML",
-			ref_format: "<blockquote><h4>%ref%</h4></blockquote>",
-			bible_text_format: "<blockquote>%text%</blockquote>",
+			ref_format: "<blockquote><strong>%ref%</strong>&nbsp;",
+			bible_text_format: "%text%</blockquote>",
 			verse_number_format: "<strong>%vn%</strong> ",
 			italics_format: "<em>%text%</em>",
 			afterref_newline: true, interverse_newline: false, first_verse_number: false, do_italics: true
