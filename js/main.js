@@ -79,7 +79,8 @@ function insert_texts(raw_text,
 {
 	// replace all the new lines with a filler string not found in the text
 	// this is to prevent the bcv parser from picking multiple texts
-	raw_text = raw_text.replaceAll("\n", "<N>")
+	const regex = / *\n/gi;
+	raw_text = raw_text.replaceAll(regex, "<N>")
 	// fetch the references as osis, using the bcv parser
 	osises = fetch_refs(raw_text);
 	// fetch the raw references in the original text. This is to enable the replace function
