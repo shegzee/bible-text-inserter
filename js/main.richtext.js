@@ -81,7 +81,10 @@ function insert_texts(raw_text,
 {
 	// replace all the new lines with a filler string not found in the text
 	// this is to prevent the bcv parser from picking multiple texts
-	raw_text = raw_text.replaceAll("\n", "<N>")
+	const regex2 = / *\</gi; // remove trailing spaces preceding tags... not thought of any edge cases yet, though... sigh
+	raw_text = raw_text.replaceAll(regex2, "<")
+	const regex = / *\n/gi; // use regex to take care of trailing spaces
+	raw_text = raw_text.replaceAll(regex, "<N>")
 	// fetch the references as osis, using the bcv parser
 	osises = fetch_refs(raw_text);
 	// fetch the raw references in the original text. This is to enable the replace function
