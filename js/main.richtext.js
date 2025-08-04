@@ -20,8 +20,7 @@ const presets = [
 			bible_text_format: "%text%",
 			verse_number_format: "Vs%vn% ",
 			italics_format: "%text%",
-			afterref_newline: false, interverse_newline: false, first_verse_number: false, do_italics: false,
-			default: true
+			afterref_newline: false, interverse_newline: false, first_verse_number: false, do_italics: false
 		},
 		{
 			name: "Olu's",
@@ -37,7 +36,8 @@ const presets = [
 			bible_text_format: "%text%</blockquote>",
 			verse_number_format: "<strong>%vn%</strong> ",
 			italics_format: "<em>%text%</em>",
-			afterref_newline: true, interverse_newline: false, first_verse_number: false, do_italics: true
+			afterref_newline: true, interverse_newline: false, first_verse_number: false, do_italics: true,
+			default: true
 		},
 	];
 
