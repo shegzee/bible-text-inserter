@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is a project to insert bible texts into a text; to make life easier for those who need to do so frequently.
+This is a project to replace bible references into a text with the bible texts in a user-defined format, to make life easier for those who need to do so frequently.
 
 It searches through the supplied text for bible references and replaces these references with the corresponding bible text, formatted as required.
 
